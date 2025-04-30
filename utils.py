@@ -1,3 +1,5 @@
+#Leer los archivos dentro del folder
+
 import json
 
 def leer_json(nombre_archivo):

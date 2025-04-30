@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import math
 
-class SeguroSocial:
+class SeguroSocial: #Se carga todo el sistema
     def __init__(self):
         self.lista_pacientes = []
         self.lista_espera = []
@@ -13,27 +13,27 @@ class SeguroSocial:
         self.lista_pacientes_naranja = []
         self.lista_pacientes_verde = []
 
-    def agregar_pacientes(self):
+    def agregar_pacientes(self): #Leer la lista de pacientes
         try:
             self.lista_pacientes = u.leer_json("lista_pacientes")
         except:
             print("Hubo un error leyendo el archivo")    
 
-    def agregar_enfermedades(self):
+    def agregar_enfermedades(self): #Leer la lista de enfermedades
         try:
             self.lista_enfermedades = u.leer_json("lista_enfermedades")
         except:
             print("Hubo un error leyendo el archivo")   
 
-    def generar_lista_espera(self):
+    def generar_lista_espera(self): #Leer de la lista de pacientes identificar el numero de id para buscar la enfermedad designada en lista de enfermedades
         for paciente in self.lista_pacientes:
             id_enfermedad = paciente['enfermedad']
             enfermedad = None
             for e in self.lista_enfermedades:
                 if e["id"] == id_enfermedad:
-                    enfermedad = e
- 
-            if enfermedad["urgencia"] == Severidad.VERDE.value:
+                    enfermedad = e 
+            #El codigo va identidicar cual es el estado de urgencia de la enfermedad 
+            if enfermedad["urgencia"] == Severidad.VERDE.value: 
                 self.lista_pacientes_verde.append({
                     "nombre_paciente": " ".join([paciente["nombre"], paciente["apellido"]]),
                     "edad": paciente["edad"],
@@ -52,7 +52,7 @@ class SeguroSocial:
                     "enfermedad": enfermedad["nombre_enfermedad"]
                 })       
 
-    def generar_reporte(self):
+    def generar_reporte(self): #Generar un reporte con la categorias verde, rojo y naranja
         categorias = ["verde", "rojo", "naranja"]
         pacientes = [len(self.lista_pacientes_verde), len(self.lista_pacientes_rojo), len(self.lista_pacientes_naranja)]
         bar_colors = ['green', 'red', 'orange']
@@ -62,7 +62,7 @@ class SeguroSocial:
         plt.title('Resumen de pacientes')
         plt.show()    
         
-    def filtrar_por_edad(self):
+    def filtrar_por_edad(self): #el usuario puede filtrar por edad
         df = pd.DataFrame(self.lista_pacientes)
         simbolo = ""
         numero = 0
@@ -88,7 +88,7 @@ class SeguroSocial:
             df_filtered = df[df["edad"] == numero]
             print(df_filtered) 
     
-    def paciente_mayor_edad(self):
+    def paciente_mayor_edad(self): #Mostrar la informacion con el paciente con mayor edad
         df_paciente = pd.DataFrame(self.lista_pacientes)
         df_enfermedad = pd.DataFrame(self.lista_enfermedades)
         
