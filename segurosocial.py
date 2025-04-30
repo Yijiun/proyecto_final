@@ -1,6 +1,8 @@
 import utils as u
 from severidad import Severidad
 import matplotlib.pyplot as plt
+import pandas as pd
+import math
 
 class SeguroSocial:
     def __init__(self):
@@ -59,3 +61,39 @@ class SeguroSocial:
         plt.ylabel('Cantidad')
         plt.title('Resumen de pacientes')
         plt.show()    
+        
+    def filtrar_por_edad(self):
+        df = pd.DataFrame(self.lista_pacientes)
+        simbolo = ""
+        numero = 0
+        while True:
+            simbolo = input("Escoja el filtro a usar mayor, menor o igual a? [>, <, =]: ")
+            if simbolo not in(">", "<", "="):
+                print("Por favor seleccione una opcion valida.")
+            else:
+                break
+        while True:
+            numero = int(input("Digite la edad por la que desea filtrar los datos: "))        
+            if numero < 0 or numero > 100:
+               print("Por favor digite una edad valida.")
+            else:
+                break   
+        if simbolo == ">":         
+            df_filtered = df[df["edad"] >= numero]
+            print(df_filtered)
+        elif simbolo == "<":           
+            df_filtered = df[df["edad"] <= numero]
+            print(df_filtered)
+        else:          
+            df_filtered = df[df["edad"] == numero]
+            print(df_filtered) 
+    
+    def paciente_mayor_edad(self):
+        df_paciente = pd.DataFrame(self.lista_pacientes)
+        df_enfermedad = pd.DataFrame(self.lista_enfermedades)
+        
+        df_joined = df_paciente.merge(df_enfermedad, how="left" , left_on="enfermedad", right_on="id") 
+        df_joined['nombre_completo'] = df_joined['nombre'] + ' ' + df_joined['apellido']  
+        row = df_joined.loc[df_joined['edad'].idxmax(), ['nombre_completo', 'edad', 'nombre_enfermedad']] 
+        print(row)
+        
